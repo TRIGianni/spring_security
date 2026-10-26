@@ -11,4 +11,9 @@ public class HelloController {
         return "Hello World";
     }
 
+    @GetMapping("/api-key/hello")
+    public String apiHello(){
+        return "Hello World API";
+    }
+
 }
