@@ -18,23 +18,23 @@ public class Demo1Application {
         SpringApplication.run(Demo1Application.class, args);
     }
 
-    @Bean
-    @Order(SecurityFilterProperties.BASIC_AUTH_ORDER-1)
-    SecurityFilterChain apiKeySecurityFilterChain(HttpSecurity http) {
-        http.securityMatchers(
-                (matchers)->matchers.requestMatchers("/api-key/**"));
-        http.authorizeHttpRequests(
-                (requests) -> requests.anyRequest().authenticated());
-        http.addFilterBefore(new ApiKeyFilter(), AuthorizationFilter.class);
-        return http.build();
-    }
+//    @Bean
+//    @Order(SecurityFilterProperties.BASIC_AUTH_ORDER-1)
+//    SecurityFilterChain apiKeySecurityFilterChain(HttpSecurity http) {
+//        http.securityMatchers(
+//                (matchers)->matchers.requestMatchers("/api-key/**"));
+//        http.authorizeHttpRequests(
+//                (requests) -> requests.anyRequest().authenticated());
+//        http.addFilterBefore(new ApiKeyFilter(), AuthorizationFilter.class);
+//        return http.build();
+//    }
 
     @Bean
     @Order(SecurityFilterProperties.BASIC_AUTH_ORDER)
     SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) {
         http.authorizeHttpRequests((requests) -> requests.anyRequest().authenticated());
         http.formLogin(withDefaults());
-        http.httpBasic(withDefaults());
+//        http.httpBasic(withDefaults());
         return http.build();
     }
 }
