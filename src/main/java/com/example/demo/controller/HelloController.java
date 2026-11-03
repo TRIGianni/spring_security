@@ -1,4 +1,4 @@
-package com.example.demo;
+package com.example.demo.controller;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -11,9 +11,9 @@ public class HelloController {
         return "Hello World";
     }
 
-    @GetMapping("/api-key/hello")
+    @GetMapping("/private/hello")
     public String apiHello(){
-        return "Hello World API";
+        return "🔐 Hello World 🔐";
     }
 
 }
