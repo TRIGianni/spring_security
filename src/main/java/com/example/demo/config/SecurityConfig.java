@@ -11,6 +11,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -24,6 +25,7 @@ import java.security.Permission;
 
 @Configuration
 @EnableWebSecurity(debug = true)
+@EnableMethodSecurity
 public class SecurityConfig {
     @Autowired
     private JwtAuthFilter jwtAuthFilter;
@@ -32,8 +34,8 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(auth -> auth
                 .requestMatchers("/authenticate").permitAll()
-                .requestMatchers(HttpMethod.GET,"/private/**").hasAuthority(Permissions.READ.name())
-                .requestMatchers(HttpMethod.POST,"/private/**").hasAuthority(Permissions.WRITE.name())
+                //.requestMatchers(HttpMethod.GET,"/private/**").hasAuthority(Permissions.READ.name())
+                //.requestMatchers(HttpMethod.POST,"/private/**").hasAuthority(Permissions.WRITE.name())
                 .anyRequest().authenticated());
 
         http.sessionManagement(session -> session
