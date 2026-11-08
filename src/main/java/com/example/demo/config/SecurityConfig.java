@@ -34,6 +34,7 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(auth -> auth
                 .requestMatchers("/authenticate").permitAll()
+                .requestMatchers("/users/register").permitAll()
                 //.requestMatchers(HttpMethod.GET,"/private/**").hasAuthority(Permissions.READ.name())
                 //.requestMatchers(HttpMethod.POST,"/private/**").hasAuthority(Permissions.WRITE.name())
                 .anyRequest().authenticated());
