@@ -1,6 +1,8 @@
 package com.example.demo.filters;
 
 import com.example.demo.service.CustomUserDetailsService;
+import com.example.demo.token.Token;
+import com.example.demo.token.TokenRepository;
 import com.example.demo.util.JWTUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -24,6 +26,9 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     @Autowired
     private CustomUserDetailsService customUserDetailsService;
 
+    @Autowired
+    private TokenRepository tokenRepository;
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         //Extraire JWT Token
@@ -36,7 +41,13 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         }
         if(username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = customUserDetailsService.loadUserByUsername(username);
-            if(jwtUtil.validateToken(username,userDetails,token)) {
+            Token tokenEntity = tokenRepository.findByToken(token);
+            Boolean isTokenValide =false;
+            if(tokenEntity != null) {
+                 isTokenValide = !tokenEntity.isExpired() && !tokenEntity.isRevoked();
+            }
+
+            if(jwtUtil.validateToken(username,userDetails,token) && isTokenValide) {
                 UsernamePasswordAuthenticationToken authToken =
                         new UsernamePasswordAuthenticationToken(
                                 userDetails, null, userDetails.getAuthorities());

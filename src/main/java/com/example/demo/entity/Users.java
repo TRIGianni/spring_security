@@ -1,5 +1,6 @@
 package com.example.demo.entity;
 
+import com.example.demo.token.Token;
 import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -21,6 +22,9 @@ public class Users implements UserDetails{
 
     @Enumerated(EnumType.STRING)
     private Role role;
+
+    @OneToMany(mappedBy = "user")
+    private List<Token>  tokens;
 
     public Long getId() {
         return id;
@@ -84,6 +88,7 @@ public class Users implements UserDetails{
     public void setRole(Role role) {
         this.role = role;
     }
+
 
 
 }

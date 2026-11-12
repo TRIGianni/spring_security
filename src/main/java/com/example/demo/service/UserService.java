@@ -2,8 +2,9 @@ package com.example.demo.service;
 
 import com.example.demo.entity.*;
 import com.example.demo.repository.UserDetailsRepository;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
+import com.example.demo.token.TokenRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.token.TokenService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -11,6 +12,9 @@ import org.springframework.stereotype.Service;
 public class UserService {
     public final UserDetailsRepository userDetailsRepository;
     public PasswordEncoder passwordEncoder;
+    @Autowired
+    public TokenRepository tokenRepository;
+
     public UserService(UserDetailsRepository userDetailsRepository, PasswordEncoder passwordEncoder) {
         this.userDetailsRepository = userDetailsRepository;
         this.passwordEncoder = passwordEncoder;
@@ -40,9 +44,21 @@ public class UserService {
         }
         Users users = new Users();
         users.setUsername(createUserByAdminRequest.username());
-        users.setRole(createUserByAdminRequest.role());
+        users.setRole(Role.valueOf(createUserByAdminRequest.role()));
         users.setPassword(passwordEncoder.encode(createUserByAdminRequest.password()));
         Users user = userDetailsRepository.save(users);
         return new UserResponse(user.getId(),user.getUsername(),user.getRole().name());
+    }
+
+    public void revokeUserToken(Users users) {
+        var valideUserTokens = tokenRepository.findAllValidTokensByUser(users.getId());
+        if(valideUserTokens.isEmpty()){
+            return;
+        }
+        valideUserTokens.forEach(token -> {
+            token.setRevoked(true);
+            token.setExpired(true);
+        });
+        tokenRepository.saveAll(valideUserTokens);
     }
 }

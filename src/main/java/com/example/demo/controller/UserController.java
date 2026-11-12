@@ -29,7 +29,8 @@ public class UserController {
 
     @PostMapping("/admin/create")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<UserResponse> registerByAdmin(@RequestBody CreateUserByAdminRequest createUserByAdminRequest) {
+    public ResponseEntity<UserResponse> registerByAdmin(@RequestBody CreateUserByAdminRequest createUserByAdminRequest)
+    {
 
         UserResponse userResponse = userService.createUserOrAdmin(createUserByAdminRequest);
         return ResponseEntity.ok(userResponse);
